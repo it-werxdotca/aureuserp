@@ -97,7 +97,7 @@ class MessageAction extends Action
                     ->hiddenLabel()
                     ->multiple()
                     ->directory('messages-attachments')
-                    ->disableGrammarly()
+                    // ->disableGrammarly()
                     ->previewable(true)
                     ->panelLayout('grid')
                     ->imagePreviewHeight('100')
