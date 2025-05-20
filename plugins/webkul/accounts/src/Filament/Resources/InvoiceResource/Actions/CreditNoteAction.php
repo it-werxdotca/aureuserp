@@ -14,6 +14,7 @@ use Webkul\Account\Models\MoveLine;
 use Webkul\Account\Models\MoveReversal;
 use Webkul\Invoice\Filament\Clusters\Customer\Resources\CreditNotesResource;
 use Webkul\Support\Traits\PDFHandler;
+use Illuminate\Support\Str;
 
 class CreditNoteAction extends Action
 {
@@ -76,7 +77,10 @@ class CreditNoteAction extends Action
     private function createMove(MoveReversal $creditNote, Move $record): Move
     {
         $newMove = $record->replicate()->fill([
-            'reference'         => "Reversal of: {$record->name}, {$creditNote->reason}",
+            'reference'         => Str::limit(
+                "Reversal of: {$record->name}, {$creditNote->reason}",
+                250
+            ),
             'reversed_entry_id' => $record->id,
             'state'             => Enums\MoveState::DRAFT,
             'move_type'         => Enums\MoveType::OUT_REFUND,
