@@ -3,7 +3,7 @@
 use Illuminate\Support\Number;
 
 if (! function_exists('money')) {
-    function money(float | \Closure $amount, string | \Closure | null $currency = null, int $divideBy = 0, string | \Closure | null $locale = null): string
+    function money(float|\Closure $amount, string|\Closure|null $currency = null, int $divideBy = 0, string|\Closure|null $locale = null): string
     {
         $amount = $amount instanceof \Closure ? $amount() : $amount;
 
@@ -14,7 +14,7 @@ if (! function_exists('money')) {
         if ($divideBy > 0) {
             $amount /= $divideBy;
         }
-        
+
         return Number::currency($amount, $currency, $locale);
     }
 }

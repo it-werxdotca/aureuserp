@@ -8,9 +8,9 @@ use Webkul\Account\Enums\MoveState;
 use Webkul\Account\Enums\PaymentState;
 use Webkul\Account\Facades\Tax as TaxFacade;
 use Webkul\Account\Mail\Invoice\Actions\InvoiceEmail;
+use Webkul\Account\Models\Journal;
 use Webkul\Account\Models\Move as AccountMove;
 use Webkul\Account\Models\MoveLine;
-use Webkul\Account\Models\Journal;
 use Webkul\Account\Models\Partner;
 use Webkul\Account\Models\Tax;
 use Webkul\Support\Services\EmailService;
@@ -169,7 +169,7 @@ class AccountManager
         return $record;
     }
 
-    public function  computePartnerDisplayInfo(AccountMove $record): AccountMove
+    public function computePartnerDisplayInfo(AccountMove $record): AccountMove
     {
         $vendorDisplayName = $record->partner?->name;
 
@@ -180,20 +180,20 @@ class AccountManager
                 $vendorDisplayName = "#Created by: {$record->createdBy->name}";
             }
         }
-    
+
         $record->invoice_partner_display_name = $vendorDisplayName;
 
         return $record;
     }
 
-    public function  computeInvoiceCurrencyRate(AccountMove $record): AccountMove
+    public function computeInvoiceCurrencyRate(AccountMove $record): AccountMove
     {
-        $record->invoice_currency_rate = 1; 
+        $record->invoice_currency_rate = 1;
 
         return $record;
     }
 
-    public function  computeJournalId(AccountMove $record): AccountMove
+    public function computeJournalId(AccountMove $record): AccountMove
     {
         if (! in_array($record->journal?->type, $record->getValidJournalTypes())) {
             $record->journal_id = $this->searchDefaultJournal($record)?->id;
@@ -202,7 +202,7 @@ class AccountManager
         return $record;
     }
 
-    public function  searchDefaultJournal(AccountMove $record): ?Journal
+    public function searchDefaultJournal(AccountMove $record): ?Journal
     {
         $validJournalTypes = $record->getValidJournalTypes();
 
@@ -211,14 +211,14 @@ class AccountManager
             ->first();
     }
 
-    public function  computeCommercialPartnerId(AccountMove $record): AccountMove
+    public function computeCommercialPartnerId(AccountMove $record): AccountMove
     {
         $record->commercial_partner_id = $record->partner_id;
 
         return $record;
     }
 
-    public function  computePartnerShippingId(AccountMove $record): AccountMove
+    public function computePartnerShippingId(AccountMove $record): AccountMove
     {
         $record->partner_shipping_id = $record->partner_id;
 
@@ -284,7 +284,7 @@ class AccountManager
 
         $line->currency_id = $move->currency_id;
 
-        //Todo:: check this
+        // Todo:: check this
         $line->company_currency_id = $move->currency_id;
 
         $line->company_id = $move->company_id;
@@ -418,26 +418,26 @@ class AccountManager
             }
 
             $taxLineData = [
-                'name'                  => $tax->name,
-                'move_id'               => $move->id,
-                'move_name'             => $move->name,
-                'display_type'          => Enums\DisplayType::TAX,
-                'currency_id'           => $move->currency_id,
-                'partner_id'            => $move->partner_id,
-                'company_id'            => $move->company_id,
-                'company_currency_id'   => $move->company_currency_id,
-                'commercial_partner_id' => $move->partner_id,
+                'name'                     => $tax->name,
+                'move_id'                  => $move->id,
+                'move_name'                => $move->name,
+                'display_type'             => Enums\DisplayType::TAX,
+                'currency_id'              => $move->currency_id,
+                'partner_id'               => $move->partner_id,
+                'company_id'               => $move->company_id,
+                'company_currency_id'      => $move->company_currency_id,
+                'commercial_partner_id'    => $move->partner_id,
                 'journal_id'               => $move->journal_id,
-                'parent_state'          => $move->state,
-                'date'                  => now(),
-                'creator_id'            => $move->creator_id,
-                'debit'                 => $debit,
-                'credit'                => $credit,
-                'balance'               => $balance,
-                'amount_currency'       => $amountCurrency,
-                'tax_base_amount'       => $taxData['tax_base_amount'],
-                'tax_line_id'           => $taxId,
-                'tax_group_id'          => $tax->tax_group_id,
+                'parent_state'             => $move->state,
+                'date'                     => now(),
+                'creator_id'               => $move->creator_id,
+                'debit'                    => $debit,
+                'credit'                   => $credit,
+                'balance'                  => $balance,
+                'amount_currency'          => $amountCurrency,
+                'tax_base_amount'          => $taxData['tax_base_amount'],
+                'tax_line_id'              => $taxId,
+                'tax_group_id'             => $tax->tax_group_id,
             ];
 
             if (isset($existingTaxLines[$taxId])) {
